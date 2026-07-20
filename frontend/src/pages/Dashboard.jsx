@@ -1,8 +1,31 @@
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { getTrafficStatistics } from "../services/trafficService";
 import "../styles/Dashboard.css";
 
 function Dashboard() {
   const navigate = useNavigate();
+
+  const [stats, setStats] = useState({
+    total_records: 0,
+    average_vehicle_count: 0,
+    average_speed: 0,
+    traffic_condition: "Loading...",
+    weather: "Loading...",
+  });
+
+  useEffect(() => {
+    async function loadStatistics() {
+      try {
+        const data = await getTrafficStatistics();
+        setStats(data);
+      } catch (error) {
+        console.error("Error fetching statistics:", error);
+      }
+    }
+
+    loadStatistics();
+  }, []);
 
   const today = new Date();
 
@@ -27,7 +50,7 @@ function Dashboard() {
 
       {/* Top Navigation */}
       <header className="topbar">
-        <h2>🚦 TrafficVision AI</h2>
+        <h2>TrafficVision AI</h2>
 
         <button className="logout-btn" onClick={handleLogout}>
           Logout
@@ -37,7 +60,7 @@ function Dashboard() {
       {/* Welcome Section */}
       <section className="welcome">
 
-        <h1>Welcome, Admin 👋</h1>
+        <h1>Welcome, Admin</h1>
 
         <p>
           Smart Traffic Prediction & Congestion Management Dashboard
@@ -55,27 +78,27 @@ function Dashboard() {
       <section className="cards">
 
         <div className="card vehicle">
-          <h3>🚗 Vehicle Count</h3>
-          <h2>1250</h2>
-          <p>Vehicles detected today</p>
+          <h3>Vehicle Count</h3>
+          <h2>{stats.average_vehicle_count}</h2>
+          <p>Average vehicles from dataset</p>
         </div>
 
         <div className="card congestion">
-          <h3>🚦 Congestion</h3>
-          <h2>Medium</h2>
+          <h3>Congestion</h3>
+          <h2>{stats.traffic_condition}</h2>
           <p>Current traffic condition</p>
         </div>
 
         <div className="card weather">
-          <h3>🌤 Weather</h3>
-          <h2>Sunny</h2>
-          <p>Temperature 32°C</p>
+          <h3>Weather</h3>
+          <h2>{stats.weather}</h2>
+          <p>Live weather from dataset</p>
         </div>
 
         <div className="card status">
-          <h3>🛣 Traffic Status</h3>
-          <h2>Normal</h2>
-          <p>All roads are operational</p>
+          <h3>Total Records</h3>
+          <h2>{stats.total_records}</h2>
+          <p>Dataset records loaded</p>
         </div>
 
       </section>
@@ -83,9 +106,9 @@ function Dashboard() {
       {/* Footer */}
 
       <footer className="footer">
-         <p>TrafficVision AI</p>
-         <p>Smart Traffic Prediction & Congestion Management System</p>
-          <p>Version 1.0</p>
+        <p>TrafficVision AI</p>
+        <p>Smart Traffic Prediction & Congestion Management System</p>
+        <p>Version 1.0</p>
       </footer>
 
     </div>
