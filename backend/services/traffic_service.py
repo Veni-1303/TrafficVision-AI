@@ -8,9 +8,9 @@ DATASET_PATH = BASE_DIR / "dataset" / "traffic_dataset.csv"
 # Load Dataset
 try:
     traffic_data = pd.read_csv(DATASET_PATH)
-    print("✅ Dataset Loaded Successfully")
+    print(" Dataset Loaded Successfully")
 except Exception as e:
-    print("❌ Error loading dataset:", e)
+    print(" Error loading dataset:", e)
     traffic_data = pd.DataFrame()
 
 
@@ -53,3 +53,36 @@ def get_statistics():
             traffic_data["Weather_Condition"].mode()[0]
         )
     }
+
+
+def search_traffic(weather="", condition=""):
+    """
+    Search traffic records by weather and traffic condition
+    """
+
+    if traffic_data.empty:
+        return []
+
+    filtered = traffic_data.copy()
+
+    # Filter by Weather
+    if weather:
+        filtered = filtered[
+            filtered["Weather_Condition"].astype(str).str.contains(
+                weather,
+                case=False,
+                na=False
+            )
+        ]
+
+    # Filter by Traffic Condition
+    if condition:
+        filtered = filtered[
+            filtered["Traffic_Condition"].astype(str).str.contains(
+                condition,
+                case=False,
+                na=False
+            )
+        ]
+
+    return filtered.to_dict(orient="records")

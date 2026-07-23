@@ -169,3 +169,82 @@ The authentication module is working correctly and has been tested using Swagger
 The project is ready for the next phase, which includes backend integration, traffic monitoring, and database implementation.
 
 Developed as part of the Infosys Internship Program.
+
+
+# Week 3 Progress Update
+
+## Module: Traffic Dataset Integration
+
+### Work Completed
+
+- Selected the Smart Mobility Traffic Dataset after comparing multiple traffic-related datasets.
+- Performed Exploratory Data Analysis (EDA) on the dataset.
+- Understood all dataset columns including Timestamp, Latitude, Longitude, Vehicle Count, Traffic Speed, Road Occupancy, Weather Condition, Traffic Light State, Parking Availability, and Traffic Condition.
+- Added the dataset to the project folder.
+- Integrated the dataset with the FastAPI backend using Pandas.
+- Created the Traffic data model.
+- Implemented the Traffic Service to read the dataset and calculate dashboard statistics.
+- Developed Traffic APIs:
+  - GET /traffic
+  - GET /traffic/statistics
+- Successfully tested the APIs using Swagger UI.
+- Connected the React frontend with the FastAPI backend.
+- Replaced static dashboard values with dynamic values retrieved from the dataset.
+
+## Technologies Used
+
+- React + Vite
+- FastAPI
+- Python
+- Pandas
+- Swagger UI
+
+## Dataset
+
+Name:
+Smart Mobility Traffic Dataset
+
+Purpose:
+The dataset is used for traffic monitoring, dashboard visualization, congestion analysis, and future AI-based traffic prediction.
+
+Important Columns
+
+- Timestamp
+- Latitude
+- Longitude
+- Vehicle_Count
+- Traffic_Speed_kmh
+- Road_Occupancy_%
+- Traffic_Light_State
+- Weather_Condition
+- Accident_Report
+- Parking_Availability
+- Traffic_Condition
+
+## Challenges Faced
+
+- Selecting the most suitable dataset from multiple options.
+- Understanding the dataset structure and column names.
+- Configuring FastAPI to read the dataset correctly.
+- Resolving backend startup issues.
+- Connecting the React frontend with FastAPI APIs.
+
+## Learning
+
+- Exploratory Data Analysis (EDA)
+- FastAPI Routing
+- Service Layer Architecture
+- REST API Development
+- Dataset Integration using Pandas
+- React API Integration using Fetch
+- Swagger API Testing
+
+## Next Implementation
+
+- Traffic Records Page
+- Search Functionality
+- Filter Functionality
+- Pagination
+- PostgreSQL Integration
+- Live Map Integration
+- AI Traffic Prediction

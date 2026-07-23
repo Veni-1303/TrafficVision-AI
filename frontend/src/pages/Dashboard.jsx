@@ -52,19 +52,45 @@ function Dashboard() {
       <header className="topbar">
         <h2>TrafficVision AI</h2>
 
-        <button className="logout-btn" onClick={handleLogout}>
+        <button
+          className="logout-btn"
+          onClick={handleLogout}
+        >
           Logout
         </button>
       </header>
 
       {/* Welcome Section */}
       <section className="welcome">
-
-        <h1>Welcome, Admin</h1>
+        <h1> Bengaluru Smart Traffic Dashboard</h1>
 
         <p>
-          Smart Traffic Prediction & Congestion Management Dashboard
+          AI-Based Traffic Monitoring & Congestion Management System
         </p>
+
+        <div className="city-details">
+
+          <div className="city-card">
+            <h3> City</h3>
+            <p>Bengaluru</p>
+          </div>
+
+          <div className="city-card">
+            <h3> Country</h3>
+            <p>India</p>
+          </div>
+
+          <div className="city-card">
+            <h3> Monitoring</h3>
+            <p>Live Traffic</p>
+          </div>
+
+          <div className="city-card">
+            <h3> Coverage</h3>
+            <p>Metropolitan Region</p>
+          </div>
+
+        </div>
 
         <div className="date-time">
           <p>{currentDate}</p>
@@ -73,38 +99,95 @@ function Dashboard() {
 
       </section>
 
-      {/* Dashboard Cards */}
+      {/* Navigation Buttons */}
+      <div className="navigation-buttons">
 
+        <button
+          className="records-btn"
+          onClick={() => navigate("/traffic-records")}
+        >
+          View Traffic Records
+        </button>
+
+        <button
+          className="records-btn"
+          onClick={() => navigate("/live-map")}
+        >
+          View Live Traffic Map
+        </button>
+
+      </div>
+
+      {/* Dashboard Cards */}
       <section className="cards">
 
         <div className="card vehicle">
-          <h3>Vehicle Count</h3>
+          <h3> Average Vehicle Count</h3>
           <h2>{stats.average_vehicle_count}</h2>
-          <p>Average vehicles from dataset</p>
+          <p>Average vehicles detected</p>
         </div>
 
         <div className="card congestion">
-          <h3>Congestion</h3>
-          <h2>{stats.traffic_condition}</h2>
-          <p>Current traffic condition</p>
+          <h3> Congestion Level</h3>
+
+          <h2
+            className={
+              stats.traffic_condition === "Low"
+                ? "low"
+                : stats.traffic_condition === "Medium"
+                ? "medium"
+                : "high"
+            }
+          >
+            {stats.traffic_condition}
+          </h2>
+
+          <p>Current traffic congestion</p>
         </div>
 
         <div className="card weather">
-          <h3>Weather</h3>
+          <h3> Weather</h3>
           <h2>{stats.weather}</h2>
-          <p>Live weather from dataset</p>
+          <p>Current weather condition</p>
+        </div>
+
+        <div className="card speed">
+          <h3> Average Speed</h3>
+          <h2>{stats.average_speed} km/h</h2>
+          <p>Average traffic speed</p>
         </div>
 
         <div className="card status">
-          <h3>Total Records</h3>
+          <h3> Total Records</h3>
           <h2>{stats.total_records}</h2>
-          <p>Dataset records loaded</p>
+          <p>Historical dataset records</p>
+        </div>
+
+        <div className="card health">
+          <h3> Traffic Health</h3>
+
+          <h2
+            className={
+              stats.average_speed >= 60
+                ? "low"
+                : stats.average_speed >= 40
+                ? "medium"
+                : "high"
+            }
+          >
+            {stats.average_speed >= 60
+              ? "Good"
+              : stats.average_speed >= 40
+              ? "Moderate"
+              : "Heavy"}
+          </h2>
+
+          <p>Based on average traffic speed</p>
         </div>
 
       </section>
 
       {/* Footer */}
-
       <footer className="footer">
         <p>TrafficVision AI</p>
         <p>Smart Traffic Prediction & Congestion Management System</p>
