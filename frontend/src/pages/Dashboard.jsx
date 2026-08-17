@@ -1,11 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { getTrafficStatistics } from "../services/trafficService";
+import { getAlerts, getTrafficStatistics } from "../services/trafficService";
 import "../styles/Dashboard.css";
 
 function Dashboard() {
   const navigate = useNavigate();
-
   const [stats, setStats] = useState({
     total_records: 0,
     average_vehicle_count: 0,
@@ -13,18 +12,24 @@ function Dashboard() {
     traffic_condition: "Loading...",
     weather: "Loading...",
   });
+  const [isLoading, setIsLoading] = useState(true);
+  const [alerts, setAlerts] = useState([]);
 
   useEffect(() => {
     async function loadStatistics() {
       try {
-        const data = await getTrafficStatistics();
-        setStats(data);
+        const [data, currentAlerts] = await Promise.all([getTrafficStatistics(), getAlerts()]);
+        setStats(data); setAlerts(currentAlerts.slice(0, 3));
       } catch (error) {
         console.error("Error fetching statistics:", error);
+      } finally {
+        setIsLoading(false);
       }
     }
 
     loadStatistics();
+    const interval = setInterval(loadStatistics, 60000);
+    return () => clearInterval(interval);
   }, []);
 
   const today = new Date();
@@ -62,7 +67,7 @@ function Dashboard() {
 
       {/* Welcome Section */}
       <section className="welcome">
-        <h1> Bengaluru Smart Traffic Dashboard</h1>
+        <h1>Smart Traffic Dashboard</h1>
 
         <p>
           AI-Based Traffic Monitoring & Congestion Management System
@@ -72,12 +77,12 @@ function Dashboard() {
 
           <div className="city-card">
             <h3> City</h3>
-            <p>Bengaluru</p>
+            <p>{stats.areas || 0} areas</p>
           </div>
 
           <div className="city-card">
-            <h3> Country</h3>
-            <p>India</p>
+            <h3> Traffic status</h3>
+            <p>{stats.traffic_condition}</p>
           </div>
 
           <div className="city-card">
@@ -87,7 +92,7 @@ function Dashboard() {
 
           <div className="city-card">
             <h3> Coverage</h3>
-            <p>Metropolitan Region</p>
+            <p>{stats.total_records.toLocaleString()} records</p>
           </div>
 
         </div>
@@ -97,6 +102,11 @@ function Dashboard() {
           <p>{currentTime}</p>
         </div>
 
+      </section>
+
+      <section className="cards">
+        <div className="card health"><h3>Recent Alerts</h3><h2>{alerts.length}</h2><p>{alerts[0]?.alert_type || "No active alerts"}</p></div>
+        <div className="card speed"><h3>Latest Prediction</h3><h2>{stats.traffic_condition}</h2><p>Based on latest dataset conditions</p></div>
       </section>
 
       {/* Navigation Buttons */}
@@ -123,7 +133,7 @@ function Dashboard() {
 
         <div className="card vehicle">
           <h3> Average Vehicle Count</h3>
-          <h2>{stats.average_vehicle_count}</h2>
+          <h2>{isLoading ? <span className="skeleton-line" /> : stats.average_vehicle_count}</h2>
           <p>Average vehicles detected</p>
         </div>
 
@@ -139,7 +149,7 @@ function Dashboard() {
                 : "high"
             }
           >
-            {stats.traffic_condition}
+            {isLoading ? <span className="skeleton-line" /> : stats.traffic_condition}
           </h2>
 
           <p>Current traffic congestion</p>
@@ -147,19 +157,19 @@ function Dashboard() {
 
         <div className="card weather">
           <h3> Weather</h3>
-          <h2>{stats.weather}</h2>
+          <h2>{isLoading ? <span className="skeleton-line" /> : stats.weather}</h2>
           <p>Current weather condition</p>
         </div>
 
         <div className="card speed">
           <h3> Average Speed</h3>
-          <h2>{stats.average_speed} km/h</h2>
+          <h2>{isLoading ? <span className="skeleton-line" /> : `${stats.average_speed} km/h`}</h2>
           <p>Average traffic speed</p>
         </div>
 
         <div className="card status">
           <h3> Total Records</h3>
-          <h2>{stats.total_records}</h2>
+          <h2>{isLoading ? <span className="skeleton-line" /> : stats.total_records}</h2>
           <p>Historical dataset records</p>
         </div>
 
@@ -175,7 +185,7 @@ function Dashboard() {
                 : "high"
             }
           >
-            {stats.average_speed >= 60
+            {isLoading ? <span className="skeleton-line" /> : stats.average_speed >= 60
               ? "Good"
               : stats.average_speed >= 40
               ? "Moderate"

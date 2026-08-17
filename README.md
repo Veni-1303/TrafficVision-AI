@@ -1,250 +1,104 @@
 # TrafficVision AI
 
-Smart Traffic Prediction and Congestion Management System
+TrafficVision AI is a React and FastAPI traffic intelligence application for analysing the supplied traffic datasets, forecasting conditions, planning routes, visualising congestion, and producing operational reports.
 
-## Project Overview
+## Objectives
 
-TrafficVision AI is developed as part of the Infosys Internship Program. The project aims to monitor traffic conditions, predict congestion, and provide a user-friendly dashboard for traffic management using React, FastAPI, and AI technologies.
+Provide a clear operational view of traffic conditions, support safer route decisions, and turn historical records into explainable predictions, alerts, and downloadable reports.
 
-## Technologies Used
-Frontend
-- React.js
-- Vite
-- CSS
-- React Router DOM
+## Architecture
 
-Backend
-- Python
-- FastAPI
-- Swagger UI
+The React/Vite frontend consumes FastAPI REST endpoints. Service modules load the supplied CSV datasets, aggregate analytics and alerts, call the persisted ML model, and integrate OSRM/OpenStreetMap routing. PostgreSQL schema files remain available for production persistence.
 
-Database
-- PostgreSQL (In Progress)
+## Milestone 3 features
 
-Version Control
-- Git
-- GitHub
+- Dataset-driven dashboard with automatic refresh, current traffic cards, alerts, and forecast status.
+- Area and road dropdowns loaded from `dataset/traffic_Dataset.csv`.
+- Journey-focused ML prediction: area, road, weather, vehicle count, and time, with traffic, delay, risk, recommendation, and confidence.
+- OpenStreetMap live traffic markers, route recommendations, congestion heatmap colours, analytics charts, alert centre, and report exports.
+- Login and signup roles: Public User, Traffic Operator, and Admin.
+- Daily, weekly, and monthly traffic summaries with browser PDF printing and CSV export.
 
-## Project Structure
+## Folder structure
 
-TrafficVision-AI
-- frontend
-- backend
-- database
-- docker
-- docs
-- ml_model
+```
+TrafficVision-AI/
+├── backend/        FastAPI routers, services, models, configuration
+├── frontend/       React/Vite application, pages, components, styles
+├── dataset/        traffic_Dataset.csv and processed_traffic_data.csv
+├── ml_model/       trained Scikit-Learn artefact and prediction helpers
+├── database/       PostgreSQL schema and connection module
+├── docker/         container configuration
+└── docs/           project documentation
+```
 
-## Week 1 and Week 2 Implementation
+## Datasets
 
-Completed project initialization.
+- `traffic_Dataset.csv` is the geographic traffic source. It provides dates, areas, roads, traffic volume, average speed, congestion, weather, and incident attributes.
+- `processed_traffic_data.csv` is the machine-learning and analytics source. It provides encoded operational features and the traffic-condition target.
 
-Understood the project objectives and smart traffic workflow.
+The dataset names are part of the application contract and must not be renamed.
 
-Set up the React frontend using Vite.
+## APIs
 
-Designed and implemented the Login page.
+| Area | Endpoints |
+| --- | --- |
+| Traffic | `GET /traffic/`, `/traffic/statistics`, `/traffic/areas`, `/traffic/roads?area=`, `/traffic/map`, `/traffic/prediction-options` |
+| Intelligence | `GET /analytics`, `/heatmap`, `/alerts`, `/ai/recommendations`; `POST /predict`, `/route/recommend` |
+| Reports | `GET /reports?period=daily|weekly|monthly` |
+| Authentication | `POST /auth/login`, `POST /auth/signup` |
 
-Implemented Login validation.
+Interactive API documentation is available at `http://127.0.0.1:8000/docs` once the backend is running.
 
-Developed the Dashboard UI.
+## Installation and startup
 
-Implemented Logout functionality.
+Backend (Python 3.10+):
 
-Configured React Router for navigation.
+```bash
+cd backend
+python -m pip install -r requirements.txt
+uvicorn app:app --reload
+```
 
-Initialized the FastAPI backend.
+Frontend (Node.js 20+):
 
-Created the Authentication REST API.
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-Tested APIs successfully using Swagger UI.
+Open the Vite URL shown in the terminal (normally `http://localhost:5173`). Development accounts are `admin@trafficvision.com / admin123`, `operator@trafficvision.com / operator123`, and `user@trafficvision.com / user123`.
 
-Organized the backend into routers, models, services, and database folders.
+## Machine learning
 
-Accepted the GitHub collaboration invitation.
+The prediction API loads `ml_model/traffic_model.pkl`, a Scikit-Learn Random Forest artefact. The UI turns the journey inputs into the model’s feature schema and presents its confidence alongside clear operational advice. Retrain only with the existing preprocessing pipeline in `ml_model/train_model.py`.
 
-Created a personal branch (Veni-1303).
+## Algorithms and libraries
 
-Uploaded the implementation to the mentor repository.
+- Random Forest Classifier with Pandas, NumPy, and Scikit-Learn preprocessing.
+- Rule-Based Recommendation Engine for explainable travel advice.
+- OSRM/OpenStreetMap routing and Leaflet Maps visualisation.
+- Analytics aggregation and Recharts data visualisation.
 
-## Current Progress
+## Database setup
 
-Completed
-- Project Initialization
-- Frontend Setup
-- Backend Setup
-- User Authentication
-- Dashboard UI
-- API Testing
-- GitHub Branch Setup
+Create the PostgreSQL database using `database/schema.sql`, then configure connection details in `database/database.py`. The development authentication fallback allows the app to run before a database is configured; production deployments should use hashed credentials and database-backed sessions.
 
-In Progress
-- Traffic Monitoring API
-- PostgreSQL Integration
-- Dashboard API Integration
-- Congestion Tracking Workflow
-- Dataset Integration
+## Screenshots
 
-Overall Progress: 50%
+_Dashboard screenshot placeholder_
 
-## Challenges Faced
+_Prediction screenshot placeholder_
+_Reports screenshot placeholder_
 
-Initially faced React routing issues that caused a blank page.
+## Developer information
 
-Resolved React component import and routing configuration issues.
+TrafficVision AI — Full Stack AI/Intelligent Transportation Systems project. Contributions should preserve dataset names, existing routes, and the Milestone 1 and Milestone 2 workflow.
 
-Faced GitHub remote and branch configuration issues.
+## Future scope
 
-Learned the correct GitHub branching workflow and pushed code to the personal branch.
-
-Encountered an issue while starting the FastAPI server because the uvicorn command was not available in PATH.
-
-Resolved it by running:
-
-python -m uvicorn app:app --reload
-
-Faced dependency compatibility issues while working with another Python project due to Python version differences and understood the importance of using compatible package versions.
-
-## Learning
-
-React Components
-
-React Router
-
-FastAPI
-
-REST API Development
-
-Swagger API Testing
-
-Git and GitHub Workflow
-
-Branch Management
-
-Backend Project Structure
-
-Authentication API Development
-
-Project Documentation
-
-## Learning Resources
-
-React Official Documentation
-https://react.dev
-
-FastAPI Official Documentation
-https://fastapi.tiangolo.com
-
-Git Documentation
-https://git-scm.com/doc
-
-GitHub Documentation
-https://docs.github.com
-
-Swagger Documentation
-https://swagger.io
-
-## Next Implementation
-
-Implement Role-Based Authentication.
-
-Develop Traffic Monitoring APIs.
-
-Integrate PostgreSQL Database.
-
-Connect React Frontend with FastAPI Backend.
-
-Implement Congestion Tracking Workflow.
-
-Research and integrate the Traffic Dataset.
-
-Prepare the AI prediction module.
-
-## Project Status
-
-The frontend and backend environments are successfully configured.
-
-The authentication module is working correctly and has been tested using Swagger UI.
-
-The project is ready for the next phase, which includes backend integration, traffic monitoring, and database implementation.
-
-Developed as part of the Infosys Internship Program.
-
-
-# Week 3 Progress Update
-
-## Module: Traffic Dataset Integration
-
-### Work Completed
-
-- Selected the Smart Mobility Traffic Dataset after comparing multiple traffic-related datasets.
-- Performed Exploratory Data Analysis (EDA) on the dataset.
-- Understood all dataset columns including Timestamp, Latitude, Longitude, Vehicle Count, Traffic Speed, Road Occupancy, Weather Condition, Traffic Light State, Parking Availability, and Traffic Condition.
-- Added the dataset to the project folder.
-- Integrated the dataset with the FastAPI backend using Pandas.
-- Created the Traffic data model.
-- Implemented the Traffic Service to read the dataset and calculate dashboard statistics.
-- Developed Traffic APIs:
-  - GET /traffic
-  - GET /traffic/statistics
-- Successfully tested the APIs using Swagger UI.
-- Connected the React frontend with the FastAPI backend.
-- Replaced static dashboard values with dynamic values retrieved from the dataset.
-
-## Technologies Used
-
-- React + Vite
-- FastAPI
-- Python
-- Pandas
-- Swagger UI
-
-## Dataset
-
-Name:
-Smart Mobility Traffic Dataset
-
-Purpose:
-The dataset is used for traffic monitoring, dashboard visualization, congestion analysis, and future AI-based traffic prediction.
-
-Important Columns
-
-- Timestamp
-- Latitude
-- Longitude
-- Vehicle_Count
-- Traffic_Speed_kmh
-- Road_Occupancy_%
-- Traffic_Light_State
-- Weather_Condition
-- Accident_Report
-- Parking_Availability
-- Traffic_Condition
-
-## Challenges Faced
-
-- Selecting the most suitable dataset from multiple options.
-- Understanding the dataset structure and column names.
-- Configuring FastAPI to read the dataset correctly.
-- Resolving backend startup issues.
-- Connecting the React frontend with FastAPI APIs.
-
-## Learning
-
-- Exploratory Data Analysis (EDA)
-- FastAPI Routing
-- Service Layer Architecture
-- REST API Development
-- Dataset Integration using Pandas
-- React API Integration using Fetch
-- Swagger API Testing
-
-## Next Implementation
-
-- Traffic Records Page
-- Search Functionality
-- Filter Functionality
-- Pagination
-- PostgreSQL Integration
-- Live Map Integration
-- AI Traffic Prediction
+- Persist accounts with hashed passwords and role-based authorization in PostgreSQL.
+- Replace area-centre map fallbacks with road-level GPS feeds.
+- Add authenticated live sensor ingestion, websocket updates, and managed OSRM infrastructure.
+- Add scheduled report delivery and historical model monitoring.
